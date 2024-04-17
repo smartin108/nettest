@@ -1,0 +1,19 @@
+# list of servers to ping
+# as of 2022 05 01 the WAN IP and gateway are obtained dynamically
+# DESKTOP-SL0JUHG
+# removed 2023 07 12... WIN10-2017-A has been replaced by linux
+# WIN10-2017-A 
+NAS2021_4TB
+# 52.144.115.26
+# 52.144.115.1
+# 192.168.1.10
+# DNS
+# 192.195.36.253 removed 2022 07 28
+# DNS effective 2022 07 28
+# 206.225.75.226
+# DNS effective 2022 09 03
+# 208.67.222.222
+# DNS effective 2024 04 17
+206.225.75.226
+# WEB
+www.google.com
