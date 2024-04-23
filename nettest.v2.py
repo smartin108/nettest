@@ -45,6 +45,24 @@ Bug log / feature requests:
 2023 10 21: v2.1: Add blacklist of known bad server addresses. Rudimentary check WAN addresses for validity and do not 
     ping / update asap if they are invalid.
 
+
+
+2024 04 22
+
+HELLO We are managing the codebase somewhat now. 
+
+Here are things you should do or at least prioritize:
+
+*   Tests on any address determined programatically cannot be enabled or 
+    disabled in data--this has to be done in code. That needs to change.
+    For example, I need to disable *PINGING the WANIP (and presumably the
+    gateway). However, I do not wish to stop *KNOWING what the WANIP is. 
+    
+
+
+
+
+
 """
 
 
