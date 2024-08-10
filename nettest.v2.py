@@ -57,7 +57,10 @@ Here are things you should do or at least prioritize:
     disabled in data--this has to be done in code. That needs to change.
     For example, I need to disable *PINGING the WANIP (and presumably the
     gateway). However, I do not wish to stop *KNOWING what the WANIP is. 
-    
+
+*   As an end-user, I need to be able to set preferences for how I receive
+    messages. In particular, I may want to know about certain things quickly
+    or frequently, others, neither, or never. 
 
 
 
