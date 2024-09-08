@@ -84,6 +84,7 @@ log = LogInterface.start()
 hours_to_wait_between_failure_notifications = 24
 blacklist = ['0.0.0.0', '0.0.0.1']
 
+
 def write_status(dict_status):
     """Write results of server pings to storage"""
     with open('nettest.status.json', 'w') as f:
@@ -95,6 +96,16 @@ def write_WANIP_data(dict_wanip):
     with open('nettest.wanip.json', 'w') as f:
         f.write(json.dumps(dict_wanip))
 
+
+"""
+
+First observation : the two functions above do virtually the same thing.
+Even the data files are similar (if inconsistently labeled)
+
+These should be combined into a single write function that specifies which
+dictionary should be updated. Likewise, the data files should be consolidated.
+
+"""
 
 def read_status():
     """Read results of previous server pings from storage"""
@@ -130,6 +141,16 @@ def read_WANIP_data():
     return dict_wanip
 
 
+
+"""
+
+Second observation : Same as the First (seriously)
+Also, these are too complicated. Break up the functionality.
+
+"""
+
+
+
 def get_WANIP():
     """Check the WAN IP / gateway IP storage for last known addresses and update them if they are stale"""
     prior_servers = {}
@@ -140,6 +161,11 @@ def get_WANIP():
         age = (datetime.datetime.utcnow() - obtained).total_seconds() / 3600
         # we're only checking the wan ip once a day because the service might complain if we use it too often
         # we know it failed a few times with "too many requests" when checking every 15 minutes
+
+
+        """
+            `age` should be in the persistant storage
+        """
         if age < 23.96666667:  # 23 hours 58 minutes, to prevent a recheck from drifting ever later
             fresh = True
         prior_servers = dict_wanip.get('servers')
@@ -167,26 +193,6 @@ def get_WANIP():
             send_notification(server.get('wan'), 'The last known WAP IP cannot be determined. This is the current WAN IP.')
 
     return dict_wanip.get('servers')
-
-
-# def get_WANIP(): #SAVED
-#     """Check the WAN IP / gateway IP storage for last known addresses and update them if they are stale"""
-#     dict_wanip = read_WANIP_data()
-#     fresh = False
-#     if dict_wanip:
-#         obtained = datetime.datetime.fromisoformat(dict_wanip.get('obtained'))
-#         age = (datetime.datetime.utcnow() - obtained).total_seconds() / 3600
-#         if age < 23.96666667:  # 23 hours 58 minutes, to prevent a recheck from drifting ever later
-#             fresh = True
-#     if not fresh:
-#         server = {}
-#         log.info('The WAN IP data is stale and will be refreshed.')
-#         MyIP = IPData.IPData()
-#         server['wan'] = MyIP.get_wan_ip()
-#         server['gateway'] = MyIP.get_gateway_ip()
-#         dict_wanip = {'obtained_local_time': datetime.datetime.now().isoformat(), 'obtained': datetime.datetime.utcnow().isoformat(), 'servers': server}
-#         write_WANIP_data(dict_wanip)
-#     return dict_wanip.get('servers')
 
 
 def get_server_list():
