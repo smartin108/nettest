@@ -245,7 +245,7 @@ def send_notification(server, message):
     try:
         messenger.Quickmail(
                 subject='nettest v2 automated message',
-                to='5178972673@vtext.com',
+                to='5175124876@vtext.com',
                 body=f'Nettest v2 {message_time}\nConnection status to server {server}: {message}')
     except Exception as e:
         log.critical('An error occurred while trying to send a message')
