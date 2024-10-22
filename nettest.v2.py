@@ -184,10 +184,16 @@ def get_WANIP():
             # we're trying to detect if the wanip or gateway has changed
             if prior_servers.get('wan') != server.get('wan'):
                 # the wan ip has changed?
-                send_notification(server.get('wan'), 'The WAN IP has changed since the last time we checked.')
+                # this does not work well for Metronet because the WAN IP is 
+                #   constantly changing. DHCP anyone? lol
+                # send_notification(server.get('wan'), 'The WAN IP has changed since the last time we checked.')
+                pass
             if prior_servers.get('gateway') != server.get('gateway'):
                 # the gateway ip has changed?
-                send_notification(server.get('gateway'), 'The gateway IP has changed since the last time we checked.')
+                # this does not work well for Metronet because the WAN IP is 
+                #   constantly changing. DHCP anyone? lol
+                # send_notification(server.get('gateway'), 'The gateway IP has changed since the last time we checked.')
+                pass
         else:
             # we don't actually know the prior servers, which means the file that stores them was missing or borked
             send_notification(server.get('wan'), 'The last known WAP IP cannot be determined. This is the current WAN IP.')
