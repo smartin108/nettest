@@ -307,7 +307,8 @@ def main():
                 alert_start = datetime.datetime.utcnow().isoformat()
                 last_notified = alert_start
                 log.info(f'New alert: Server {server} cannot be contacted. The error was {alert_description}.')
-                send_notification(server, 'New alert. ' + alert_description)
+                if server not in blacklist:
+                    send_notification(server, 'New alert. ' + alert_description)
         else:
             # not in alert, or no longer in alert
             if previous_server_status:
