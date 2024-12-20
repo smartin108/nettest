@@ -81,7 +81,7 @@ filename = f'{logname}.log'
 LogInterface = logger.Interface(logname=logname, filename=filename, level='INFO')
 log = LogInterface.start()
 
-hours_to_wait_between_failure_notifications = 24
+hours_to_wait_between_failure_notifications = 23
 blacklist = ['0.0.0.0', '0.0.0.1']
 
 
@@ -265,7 +265,9 @@ def main():
         previous_status = {}
         log.info('The status dictionary was not found in the status file and will be created anew.')
     current_server_status = {}
-    for server in get_server_list():
+    servers = get_server_list()
+    ignore = servers[-2:]
+    for server in servers:
         in_alert, alert_description = do_ping(server)
         # print(server, in_alert, alert_description)
         try:
@@ -288,7 +290,8 @@ def main():
                         last_notified = datetime.datetime.utcnow().isoformat()
                         log_message = f"Connection to server {server} is still failing. The event started at {previous_server_status.get('alert_start')} UTC. The last notification was sent at {previous_server_status.get('last_notified')} UTC. A new notification will be sent."
                         log.info(log_message)
-                        send_notification(server, 'Repeat alert. ' + alert_description)
+                        if server not in ignore:
+                            send_notification(server, 'Repeat alert. ' + alert_description)
                     else:
                         # do not call notification
                         last_notified = previous_server_status.get('last_notified')
@@ -300,14 +303,15 @@ def main():
                     alert_start = datetime.datetime.utcnow().isoformat()
                     last_notified = alert_start
                     log.info(f'New alert: Server {server} cannot be contacted. The error was {alert_description}.')
-                    send_notification(server, 'New alert. ' + alert_description)
+                    if server not in ignore:
+                        send_notification(server, 'New alert. ' + alert_description)
             else:
                 # in alert, but we have no prior knowlege of this server
                 print('we have no prior knowlege of this server')
                 alert_start = datetime.datetime.utcnow().isoformat()
                 last_notified = alert_start
                 log.info(f'New alert: Server {server} cannot be contacted. The error was {alert_description}.')
-                if server not in blacklist:
+                if server not in blacklist and server not in ignore::
                     send_notification(server, 'New alert. ' + alert_description)
         else:
             # not in alert, or no longer in alert
@@ -315,7 +319,8 @@ def main():
                 # we have prior knowledge
                 if previous_server_status.get('in_alert') == True:
                     log.info(f'Connection to server {server} has been reestablished.')
-                    send_notification(server, 'Connection reestablished.')
+                    if server not in ignore:
+                        send_notification(server, 'Connection reestablished.')
             alert_start = None
             last_notified = None
         current_server_status[server] = {
